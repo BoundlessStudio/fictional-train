@@ -5,14 +5,8 @@
       "samplingSettings": {
         "isEnabled": true,
         "excludedTypes": "Request"
-      }
-    }
-  },
-  "extensions": {
-    "mcp": {
-      "expose": {
-        "enabled": true
-      }
+      },
+      "enableLiveMetricsFilters": true
     }
   }
 }

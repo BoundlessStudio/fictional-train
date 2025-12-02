@@ -1,55 +1,34 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Extensions.Mcp;
-using Microsoft.Azure.Functions.Worker.Extensions.Storage;
-using Microsoft.Extensions.Logging;
+using static FunctionsSnippetTool.ToolsInformation;
 
-namespace SampleSnippetTool;
+namespace FunctionsSnippetTool;
 
-public class SnippetTool
+public class SnippetsTool()
 {
-    private const string BlobPath = "snippets/{mcptoolargs.snippetname}.json";
+    private const string BlobPath = "snippets/{mcptoolargs." + SnippetNamePropertyName + "}.json";
 
-    private readonly ILogger<SnippetTool> _logger;
-
-    public SnippetTool(ILogger<SnippetTool> logger)
+    [Function(nameof(GetSnippet))]
+    public object GetSnippet(
+        [McpToolTrigger(GetSnippetToolName, GetSnippetToolDescription)]
+            ToolInvocationContext context,
+        [BlobInput(BlobPath)] string snippetContent
+    )
     {
-        _logger = logger;
+        return snippetContent;
     }
 
     [Function(nameof(SaveSnippet))]
     [BlobOutput(BlobPath)]
     public string SaveSnippet(
-        [McpToolTrigger("save_snippet", "Saves a code snippet into your snippet collection.")]
+        [McpToolTrigger(SaveSnippetToolName, SaveSnippetToolDescription)]
             ToolInvocationContext context,
-        [McpToolProperty("snippetname", "The name of the snippet.", isRequired: true)]
+        [McpToolProperty(SnippetNamePropertyName, SnippetNamePropertyDescription, true)]
             string name,
-        [McpToolProperty("snippet", "The code snippet.", isRequired: true)]
-            string snippet)
+        [McpToolProperty(SnippetPropertyName, SnippetPropertyDescription, true)]
+            string snippet
+    )
     {
-        _logger.LogInformation(
-            "Saving snippet {SnippetName} via MCP tool call {ToolName}.",
-            name,
-            context.Name);
-
         return snippet;
-    }
-
-    [Function(nameof(GetSnippet))]
-    public object GetSnippet(
-        [McpToolTrigger("get_snippets", "Gets code snippets from your snippet collection.")]
-            ToolInvocationContext context,
-        [BlobInput(BlobPath)] string? snippetContent)
-    {
-        var snippetName = context.Arguments is not null &&
-            context.Arguments.TryGetValue("snippetname", out var snippetValue)
-                ? snippetValue?.ToString() ?? string.Empty
-                : string.Empty;
-
-        _logger.LogInformation(
-            "Retrieving snippet {SnippetName} via MCP tool call {ToolName}.",
-            snippetName,
-            context.Name);
-
-        return snippetContent ?? $"Snippet '{snippetName}' was not found.";
     }
 }
