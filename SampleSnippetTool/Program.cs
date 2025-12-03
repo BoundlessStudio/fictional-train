@@ -12,8 +12,8 @@ builder.Services
     .AddApplicationInsightsTelemetryWorkerService()
     .ConfigureFunctionsApplicationInsights();
 
-builder
-    .ConfigureMcpTool(GetSnippetToolName)
-    .WithProperty(SnippetNamePropertyName, PropertyType, SnippetNamePropertyDescription, required: true);
+//builder
+//    .ConfigureMcpTool(GetSnippetToolName)
+//    .WithProperty(SnippetNamePropertyName, PropertyType, SnippetNamePropertyDescription, required: true);
 
 builder.Build().Run();
