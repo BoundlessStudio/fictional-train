@@ -14,6 +14,6 @@ builder.Services
 
 builder
     .ConfigureMcpTool(GetSnippetToolName)
-    .WithProperty(SnippetNamePropertyName, McpToolPropertyType.String, SnippetNamePropertyDescription, true);
+    .WithProperty(SnippetNamePropertyName, PropertyType, SnippetNamePropertyDescription, required: true);
 
 builder.Build().Run();
