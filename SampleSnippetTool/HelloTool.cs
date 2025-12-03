@@ -13,6 +13,11 @@ public class HelloTool(ILogger<HelloTool> logger)
     )
     {
         logger.LogInformation("Saying hello");
-        return "Hello I am MCP Tool!";
+
+        context.TryGetHttpTransport(out var httpTransport);
+        //httpTransport.Headers.TryGetValue("Authorization", out string token);
+        var json = System.Text.Json.JsonSerializer.Serialize(httpTransport);
+        
+        return json;
     }
 }
